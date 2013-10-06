@@ -52,15 +52,15 @@ void setDistanciaAlMedio(tTrackSeg *segment);
 void actualizaFreno(tCarElt* car);
 
 /* Parámetros ajustables */
-const float cteDeAjusteLateral   = 40.0;		// Constante para el error lateral
+const float cteDeAjusteLateral   = 35.0;		// Constante para el error lateral
 
-const float cteGravedad = 9.81;			/* [m/(s*s)] */
+const float cteGravedad = 9.8;			/* [m/(s*s)] */
 const float FULL_ACCEL_MARGIN = 1.0;	/* [m/s] */
 
 const float SHIFT = 0.9;         /* [-] (% of rpmredline) */
 const float SHIFT_MARGIN = 8.0;  /* [m/s] */
 
-const float cteFreno = 0.075;
+const float cteFreno = 0.035;
 const float cteFrenoMotor = 85;
 
 /* Variables globales */
@@ -168,20 +168,20 @@ void setDistanciaAlMedio(tTrackSeg *segment)
 {
 	if(segment->type == TR_LFT or segment->next->type == TR_LFT){
 		if(distanciaAlMedio > -(segment->width/2)){
-			distanciaAlMedio -= 0.65;
+			distanciaAlMedio -= 0.57;
 		}
 	}
 	if(segment->type == TR_RGT or segment->next->type == TR_RGT){
 		if(distanciaAlMedio < (segment->width/2)){
-			distanciaAlMedio += 0.65;
+			distanciaAlMedio += 0.57;
 		}
 	}
 	if(segment->type == TR_STR and segment->next->type == TR_STR){
 		if(distanciaAlMedio<0){
-			distanciaAlMedio += 0.2;
+			distanciaAlMedio += 0.25;
 		}
 		else if (distanciaAlMedio>0){
-			distanciaAlMedio -= 0.2;
+			distanciaAlMedio -= 0.25;
 		}
 		else distanciaAlMedio = 0; // Overwriting, I know. It's just for a better comprehension
 	}
