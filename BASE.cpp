@@ -166,17 +166,17 @@ shutdown(int index)
 /* Actualiza la distancia al centro de la pista deseada con cada golpe de reloj */
 void setDistanciaAlMedio(tTrackSeg *segment)
 {
-	if(segment->type == TR_LFT){
+	if(segment->type == TR_LFT or segment->next->type == TR_LFT){
 		if(distanciaAlMedio > -(segment->width/2)){
-			distanciaAlMedio -= 0.2;
+			distanciaAlMedio -= 0.65;
 		}
 	}
-	else if(segment->type == TR_RGT){
+	if(segment->type == TR_RGT or segment->next->type == TR_RGT){
 		if(distanciaAlMedio < (segment->width/2)){
-			distanciaAlMedio += 0.2;
+			distanciaAlMedio += 0.65;
 		}
 	}
-	else if(segment->type == TR_STR){
+	if(segment->type == TR_STR and segment->next->type == TR_STR){
 		if(distanciaAlMedio<0){
 			distanciaAlMedio += 0.2;
 		}
@@ -279,7 +279,7 @@ void actualizaFreno(tCarElt* car)
 		lookaheaddist += segptr->length;
 		segptr = segptr->next;
 	}
-	printf("\n %f - ", freno);
+	// printf("\n %f - ", freno);
 }
 
 /* Compute gear */
