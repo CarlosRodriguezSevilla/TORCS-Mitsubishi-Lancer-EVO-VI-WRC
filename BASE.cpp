@@ -52,7 +52,7 @@ void setDistanciaAlMedio(tTrackSeg *segment);
 void actualizaFreno(tCarElt* car);
 
 /* Parámetros ajustables */
-const float cteDeAjusteLateral   = 0.5;		// Constante para el error lateral
+const float cteDeAjusteLateral   = 40.0;		// Constante para el error lateral
 
 const float cteGravedad = 9.81;			/* [m/(s*s)] */
 const float FULL_ACCEL_MARGIN = 1.0;	/* [m/s] */
@@ -193,7 +193,7 @@ float setCorrectDir(tCarElt* car)
 	float direccion, eAngular, eLateral;
 
 	eAngular = RtTrackSideTgAngleL(&(car->_trkPos)) - car->_yaw;
-	eLateral = cteDeAjusteLateral * (car->_trkPos.toMiddle + distanciaAlMedio) / car->_trkPos.seg->width;
+	eLateral = atan((car->_trkPos.toMiddle + distanciaAlMedio) / cteDeAjusteLateral);
 	direccion = eAngular - eLateral;
 	NORM_PI_PI(direccion); 			// Put the angle back in the range from -PI to PI
 	return direccion;
