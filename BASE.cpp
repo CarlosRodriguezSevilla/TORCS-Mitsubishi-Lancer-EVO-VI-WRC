@@ -1,8 +1,8 @@
 /***************************************************************************
 
-    file                 : BASE.cpp
-    created              : jue oct 3 13:28:27 CEST 2013
-    copyright            : (C) 2002 CarlosRodriguez
+	file                 : BASE.cpp
+	created              : jue oct 3 13:28:27 CEST 2013
+	copyright            : (C) 2002 CarlosRodriguez
 
  ***************************************************************************/
 
@@ -47,7 +47,10 @@ float getBrake(tCarElt* car);
 float setCorrectDir(tCarElt* car);
 int getGear(tCarElt *car);
 
-void setDistanciaAlMedio(tTrackSeg *segment);
+void setDistanciaAlMedio(tCarElt* car);
+void pull (tTrackSeg *segment);
+void push (tTrackSeg *segment);
+float getDistanceToNextStretch (tTrackSeg *segment);
 
 void actualizaFreno(tCarElt* car);
 
@@ -68,6 +71,7 @@ float freno = 0.0;
 float actualSD = 0.0; // SD = SPeed Difference. Diferencia de velocidad entre la actual y la deseada.
 float auxSD = 0.0; // SD = SPeed Difference.
 float distanciaAlMedio = 0.0;
+tTrackSeg *StretchStart = NULL;
 
 /* 
  * Module entry point  
@@ -77,51 +81,52 @@ BASE(tModInfo *modInfo)
 {
 	memset(modInfo, 0, 10*sizeof(tModInfo));
 
-    modInfo->name    = const_cast<char *>("BASE");		/* name of the module (short) */
-    modInfo->desc    = const_cast<char *>("");			/* description of the module (can be long) */
-    modInfo->fctInit = InitFuncPt;						/* init function */
-    modInfo->gfId    = ROB_IDENT;						/* supported framework version */
-    modInfo->index   = 1;
+	modInfo->name    = const_cast<char *>("BASE");		/* name of the module (short) */
+	modInfo->desc    = const_cast<char *>("");			/* description of the module (can be long) */
+	modInfo->fctInit = InitFuncPt;						/* init function */
+	modInfo->gfId    = ROB_IDENT;						/* supported framework version */
+	modInfo->index   = 1;
 
-    return 0; 
+	return 0; 
 } 
 
 /* Module interface initialization. */
 static int 
 InitFuncPt(int index, void *pt) 
 { 
-    tRobotItf *itf  = (tRobotItf *)pt; 
+	tRobotItf *itf  = (tRobotItf *)pt; 
 
-    itf->rbNewTrack = initTrack; /* Give the robot the track view called */ 
+	itf->rbNewTrack = initTrack; /* Give the robot the track view called */ 
 				 /* for every track change or new race */ 
-    itf->rbNewRace  = newrace; 	 /* Start a new race */
-    itf->rbDrive    = drive;	 /* Drive during race */
-    itf->rbPitCmd   = NULL;
-    itf->rbEndRace  = endrace;	 /* End of the current race */
-    itf->rbShutdown = shutdown;	 /* Called before the module is unloaded */
-    itf->index      = index; 	 /* Index used if multiple interfaces */
-    return 0; 
+	itf->rbNewRace  = newrace; 	 /* Start a new race */
+	itf->rbDrive    = drive;	 /* Drive during race */
+	itf->rbPitCmd   = NULL;
+	itf->rbEndRace  = endrace;	 /* End of the current race */
+	itf->rbShutdown = shutdown;	 /* Called before the module is unloaded */
+	itf->index      = index; 	 /* Index used if multiple interfaces */
+	return 0; 
 } 
 
 /* Called for every track change or new race. */
 static void  
 initTrack(int index, tTrack* track, void *carHandle, void **carParmHandle, tSituation *s) 
 { 
-    curTrack = track;
-    *carParmHandle = NULL; 
+	curTrack = track;
+	*carParmHandle = NULL; 
 } 
 
 /* Start a new race. */
 static void  
 newrace(int index, tCarElt* car, tSituation *s) 
 { 
+	StretchStart = car->_trkPos.seg;
 }
 
 /* Drive during race. */
 static void  
 drive(int index, tCarElt* car, tSituation *s) 
 { 
-	setDistanciaAlMedio(car->_trkPos.seg);
+	setDistanciaAlMedio(car);
 	actualizaFreno(car);
 	memset(&car->ctrl, 0, sizeof(tCarCtrl));
 
@@ -135,14 +140,14 @@ drive(int index, tCarElt* car, tSituation *s)
 		car->ctrl.accelCmd = 0.0;
 	}
 
-    /*  
-     * add the driving code here to modify the 
-     * car->_steerCmd 
-     * car->_accelCmd 
-     * car->_brakeCmd 
-     * car->_gearCmd 
-     * car->_clutchCmd 
-     */ 
+	/*  
+	 * add the driving code here to modify the 
+	 * car->_steerCmd 
+	 * car->_accelCmd 
+	 * car->_brakeCmd 
+	 * car->_gearCmd 
+	 * car->_clutchCmd 
+	 */ 
 }
 
 /* End of the current race */
@@ -162,29 +167,72 @@ shutdown(int index)
  * Funciones complementarias
  *
 ***************************************************************************/
+void setDistanciaAlMedio(tCarElt* car){
 
-/* Actualiza la distancia al centro de la pista deseada con cada golpe de reloj */
-void setDistanciaAlMedio(tTrackSeg *segment)
-{
-	if(segment->type == TR_LFT or segment->next->type == TR_LFT){
+	if (car->_trkPos.seg->type != car->_trkPos.seg->next->type){
+		if(car->_trkPos.seg->next->type == car->_trkPos.seg->next->next->type){
+			if(car->_trkPos.seg->next->next->type != car->_trkPos.seg->type){
+				if(car->_trkPos.seg->next->next->next->type == car->_trkPos.seg->next->type){
+					StretchStart = car->_trkPos.seg->next;
+				}
+			}
+		}
+	}
+	
+	if(car->_trkPos.seg->type != TR_STR){
+
+		float distanceToNextStretch = getDistanceToNextStretch(car->_trkPos.seg);
+		float halfWayStretch = getDistanceToNextStretch(StretchStart) / 2;
+
+		printf("\n Medio: %f - ", halfWayStretch);
+		printf("Distancia: %f \n", distanceToNextStretch);
+
+		if (distanceToNextStretch < halfWayStretch){
+			push(car->_trkPos.seg);
+		}
+		else pull(car->_trkPos.seg);
+	}
+	else {
+		push(car->_trkPos.seg);
+	}	
+}
+
+
+void pull (tTrackSeg *segment){
+	if(segment->type == TR_LFT){
 		if(distanciaAlMedio > -(segment->width/2)){
-			distanciaAlMedio -= 0.57;
+			distanciaAlMedio -= 0.2;
 		}
 	}
-	if(segment->type == TR_RGT or segment->next->type == TR_RGT){
+	else if(segment->type == TR_RGT){
 		if(distanciaAlMedio < (segment->width/2)){
-			distanciaAlMedio += 0.57;
+			distanciaAlMedio += 0.2;
 		}
 	}
-	if(segment->type == TR_STR and segment->next->type == TR_STR){
-		if(distanciaAlMedio<0){
-			distanciaAlMedio += 0.25;
+}
+
+void push (tTrackSeg *segment){
+	if(segment->type == TR_LFT){
+		if(distanciaAlMedio < (segment->width/2)-3){
+			distanciaAlMedio += 0.2;
 		}
-		else if (distanciaAlMedio>0){
-			distanciaAlMedio -= 0.25;
-		}
-		else distanciaAlMedio = 0; // Overwriting, I know. It's just for a better comprehension
 	}
+	else if(segment->type == TR_RGT){
+		if(distanciaAlMedio > -(segment->width/2)+3){
+			distanciaAlMedio -= 0.2;
+		}
+	}
+	else push(segment->next);
+}
+
+float getDistanceToNextStretch (tTrackSeg *segment){
+	tTrackSeg *auxSegment = segment->next;
+	float distance = segment->length;
+	while (auxSegment->type == segment->type){
+		distance += auxSegment->length;
+		auxSegment = auxSegment->next;
+	}
+	return distance;
 }
 
 /* Actualiza la dirección correcta con cada golpe de reloj */
@@ -202,35 +250,37 @@ float setCorrectDir(tCarElt* car)
 /* Compute the allowed speed on a segment */
 float getAllowedSpeed(tTrackSeg *segment)
 {
-    if (segment->next->type == TR_STR or (segment->next->next->type == TR_STR and segment->next->next->next->type == TR_STR)){
-        return FLT_MAX;
-    } else {
-        float mu = segment->surface->kFriction;
-        return sqrt(mu*cteGravedad*segment->radius);
-    }
+	if (segment->next->type == TR_STR or (segment->next->next->type == TR_STR and segment->next->next->next->type == TR_STR)){
+		return FLT_MAX;
+		// return 41.7;
+	} else {
+		float mu = segment->surface->kFriction;
+		return sqrt(mu*cteGravedad*segment->radius);
+		// return 13.9;
+	}
 }
 
 /* Compute the length to the end of the segment */
 float getDistToSegEnd(tCarElt* car)
 {
-    if (car->_trkPos.seg->type == TR_STR) {
-        return car->_trkPos.seg->length - car->_trkPos.toStart;
-    } else {
-        return (car->_trkPos.seg->arc - car->_trkPos.toStart)*car->_trkPos.seg->radius;
-    }
+	if (car->_trkPos.seg->type == TR_STR) {
+		return car->_trkPos.seg->length - car->_trkPos.toStart;
+	} else {
+		return (car->_trkPos.seg->arc - car->_trkPos.toStart)*car->_trkPos.seg->radius;
+	}
 }
 
 /* Compute fitting acceleration */
 float getAccel(tCarElt* car)
 {
-    float allowedspeed = getAllowedSpeed(car->_trkPos.seg);
-    float gr = car->_gearRatio[car->_gear + car->_gearOffset];
-    float rm = car->_enginerpmRedLine;
-    if (allowedspeed > car->_speed_x + FULL_ACCEL_MARGIN) {
-        return 1.0;
-    } else {
-        return allowedspeed/car->_wheelRadius(REAR_RGT)*gr /rm;
-    }
+	float allowedspeed = getAllowedSpeed(car->_trkPos.seg);
+	float gr = car->_gearRatio[car->_gear + car->_gearOffset];
+	float rm = car->_enginerpmRedLine;
+	if (allowedspeed > car->_speed_x + FULL_ACCEL_MARGIN) {
+		return 1.0;
+	} else {
+		return allowedspeed/car->_wheelRadius(REAR_RGT)*gr /rm;
+	}
 }
 
 void actualizaFreno(tCarElt* car)
@@ -243,13 +293,13 @@ void actualizaFreno(tCarElt* car)
 
 	float allowedspeed = getAllowedSpeed(segptr);
 	if (allowedspeed < car->_speed_x){
-		float actualSD = car->_speed_x - allowedspeed;
-		if (actualSD >= auxSD){
-			auxSD = actualSD;
+		// float actualSD = car->_speed_x - allowedspeed; // Speed Difference
+		// if (actualSD >= auxSD){
+		// 	auxSD = actualSD;
 			if(freno<1.0){
 				freno = freno + cteFreno;
 			}
-		}
+		// }
 	}
 	else if (allowedspeed > car->_speed_x + 4){
 		freno = 0.0;
@@ -279,7 +329,6 @@ void actualizaFreno(tCarElt* car)
 		lookaheaddist += segptr->length;
 		segptr = segptr->next;
 	}
-	// printf("\n %f - ", freno);
 }
 
 /* Compute gear */
