@@ -150,7 +150,7 @@ float Direccion(tCarElt* car)
 	eAngular = RtTrackSideTgAngleL(&(car->_trkPos)) - car->_yaw;
 	eLateral = atan((car->_trkPos.toMiddle + distanciaAlMedio) / cteDeAjusteLateral);
 	direccion = eAngular - eLateral;
-	NORM_PI_PI(direccion);
+	NORM_PI_PI(direccion); 			// Put the angle back in the range from -PI to PI
 	return direccion;
 }
 
@@ -210,7 +210,6 @@ void actualizaFreno(tCarElt* car){
 			if(freno<1.0 and exponenteFreno < 4){
 				freno = 0.01 * pow(3,exponenteFreno); 
 				exponenteFreno++;
-				printf("%f AAAAAAA\n", freno);
 			}
 	}
 	else if (vMaxima > car->_speed_x){
@@ -231,7 +230,6 @@ void actualizaFreno(tCarElt* car){
 				if (freno < 1.0 and exponenteFreno < 4){
 					freno = 0.01 * pow(3,exponenteFreno);
 					exponenteFreno++;
-					printf("%f -------\n", freno);
 				}
 			}
 		}
