@@ -41,6 +41,7 @@ static void shutdown(int index);
 static int  InitFuncPt(int index, void *pt); 
 
 float velocidadMaxima(tTrackSeg *segment);
+float getAccel(tCarElt* car);
 float finalSegmento(tCarElt* car);
 float getBrake(tCarElt* car);
 float setCorrectDir(tCarElt* car);
@@ -48,30 +49,24 @@ int getGear(tCarElt *car);
 
 void setDistanciaAlMedio(tTrackSeg *segment);
 
-void getAccel(tCarElt* car);
 void actualizaFreno(tCarElt* car);
 
 /* Parámetros ajustables */
 const float cteDeAjusteLateral   = 35.0;		// Constante para el error lateral
 
 const float cteGravedad = 9.8;			/* [m/(s*s)] */
-const float margenAcelerador = 1.0;	/* [m/s] */
+const float FULL_ACCEL_MARGIN = 0.5;	/* [m/s] */
 
 const float SHIFT = 0.9;         /* [-] (% of rpmredline) */
 const float SHIFT_MARGIN = 8.0;  /* [m/s] */
 
-const float cteAcelerador = 0.025;
-const float cteFreno = 0.035;
 const float cteFrenoMotor = 85;
-
 
 /* Variables globales */
 float distanciaAlMedio = 0.0;
-
 float freno = 0.0;
-float acelerador = 0.0;
-
 int exponenteFreno = 0;
+float acelerador = 0.0;
 
 /* 
  * Module entry point  
@@ -127,18 +122,15 @@ drive(int index, tCarElt* car, tSituation *s)
 { 
 	setDistanciaAlMedio(car->_trkPos.seg);
 	actualizaFreno(car);
-	getAccel(car);
 	memset(&car->ctrl, 0, sizeof(tCarCtrl));
 
 	// set up the values to return
 	car->ctrl.steer = setCorrectDir(car) / car->_steerLock; // car->_steerLock es el ángulo máximo de giro de la rueda
 	car->ctrl.gear = getGear(car);
 	car->ctrl.brakeCmd = freno;
-	if (car->ctrl.brakeCmd == 0.0) {
-		car->ctrl.accelCmd = acelerador;
-	} else {
-		car->ctrl.accelCmd = 0.0;
-	}
+	if (freno == 0.0) car->ctrl.accelCmd = getAccel(car); 
+	else car->ctrl.accelCmd = 0.0;
+
 }
 
 /* End of the current race */
@@ -163,13 +155,13 @@ shutdown(int index)
 void setDistanciaAlMedio(tTrackSeg *segment)
 {
 	if(segment->type == TR_LFT or segment->next->type == TR_LFT){
-		if(distanciaAlMedio > -(segment->width/2)-0.75){
-			distanciaAlMedio -= 0.57;
+		if(distanciaAlMedio > -(segment->width/2)-0.5){
+			distanciaAlMedio -= 0.7;
 		}
 	}
 	if(segment->type == TR_RGT or segment->next->type == TR_RGT){
-		if(distanciaAlMedio < (segment->width/2)+0.75){
-			distanciaAlMedio += 0.57;
+		if(distanciaAlMedio < (segment->width/2)+0.5){
+			distanciaAlMedio += 0.7;
 		}
 	}
 	if(segment->type == TR_STR and segment->next->type == TR_STR){
@@ -217,15 +209,15 @@ float finalSegmento(tCarElt* car)
 }
 
 /* Compute fitting acceleration */
-void getAccel(tCarElt* car)
+float getAccel(tCarElt* car)
 {
     float allowedspeed = velocidadMaxima(car->_trkPos.seg);
     float gr = car->_gearRatio[car->_gear + car->_gearOffset];
     float rm = car->_enginerpmRedLine;
-    if (allowedspeed > car->_speed_x + margenAcelerador) {
-        acelerador = 1;
+    if (allowedspeed > car->_speed_x + FULL_ACCEL_MARGIN) {
+        return 1.0;
     } else {
-        acelerador = allowedspeed/car->_wheelRadius(REAR_RGT)*gr /rm;
+        return allowedspeed/car->_wheelRadius(REAR_RGT)*gr /rm;
     }
 }
 
@@ -236,11 +228,10 @@ void actualizaFreno(tCarElt* car){
 	float vCuadrado = car->_speed_x*car->_speed_x;
 	float vMaxima = velocidadMaxima(segmento);
 
-	if (vMaxima <= car->_speed_x){
+	if (vMaxima <= car->_speed_x -15){
 			if(freno<1.0 and exponenteFreno < 4){
 				freno = 0.01 * pow(3,exponenteFreno); 
 				exponenteFreno++;
-				printf("%f AAAAAAA\n", freno);
 			}
 	}
 	else if (vMaxima > car->_speed_x){
@@ -254,14 +245,13 @@ void actualizaFreno(tCarElt* car){
 	float distMaxima = vCuadrado/(2.0*mu*G); 	// Distancia de frenado para el peor de los casos
 	while (distCalculada < distMaxima) {
 		vMaxima = velocidadMaxima(segmento);
-		if (vMaxima < car->_speed_x) {
+		if (vMaxima < car->_speed_x -15) {
 			float vMaximaCuadrado = vMaxima*vMaxima;
 			float distFrenado = (vCuadrado - vMaximaCuadrado) / (2.0*mu*G);
 			if (distFrenado > distCalculada) {
 				if (freno < 1.0 and exponenteFreno < 4){
 					freno = 0.01 * pow(3,exponenteFreno);
 					exponenteFreno++;
-					printf("%f -------\n", freno);
 				}
 			}
 		}
