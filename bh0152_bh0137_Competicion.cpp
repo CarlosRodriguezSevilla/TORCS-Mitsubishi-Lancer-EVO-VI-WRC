@@ -202,7 +202,7 @@ int cajaDeCambios(tCarElt *car)
 		float gr_down = car->_gearRatio[car->_gear + car->_gearOffset - 1];
 		omega = car->_enginerpmRedLine/gr_down;
 		if (car->_gear > 1) {
-			if ((omega*wr*cteMarcha) + (freno+0.01)*cteFrenoMotor > car->_speed_x + margenMarcha){
+			if ((omega*wr*cteMarcha) + freno*cteFrenoMotor > car->_speed_x + margenMarcha){
 				return car->_gear - 1;
 			}
 		}
@@ -226,14 +226,12 @@ void actualizaAcelerador(tCarElt* car)
 {
 	float allowedspeed = velocidadMaxima(car->_trkPos.seg);
 	float gr = car->_gearRatio[car->_gear + car->_gearOffset];
-	float rm = car->_enginerpmRedLine;
+	float rpmMax = car->_enginerpmRedLine;
 	if (allowedspeed > car->_speed_x + margenAcelerador) {
-		if (acelerador < 1){
-			acelerador = 1.0;
-		}
+		acelerador = 1.0;
 	} 
 	else {
-		acelerador = allowedspeed/car->_wheelRadius(REAR_RGT)*gr /rm;
+		acelerador = allowedspeed/car->_wheelRadius(REAR_RGT)*gr /rpmMax;
 	}
 }
 
