@@ -224,14 +224,14 @@ float velocidadMaxima(tTrackSeg *segment)
 /* Calcula la aceleración máxima evitando que las ruedas patinen */
 void actualizaAcelerador(tCarElt* car)
 {
-	float allowedspeed = velocidadMaxima(car->_trkPos.seg);
+	float vMaxima = velocidadMaxima(car->_trkPos.seg);
 	float gr = car->_gearRatio[car->_gear + car->_gearOffset];
 	float rpmMax = car->_enginerpmRedLine;
-	if (allowedspeed > car->_speed_x + margenAcelerador) {
+	if (vMaxima > car->_speed_x + margenAcelerador) {
 		acelerador = 1.0;
 	} 
 	else {
-		acelerador = allowedspeed/car->_wheelRadius(REAR_RGT)*gr /rpmMax;
+		acelerador = vMaxima/car->_wheelRadius(REAR_RGT)*gr /rpmMax;
 	}
 }
 
