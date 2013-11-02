@@ -1,7 +1,7 @@
 ;
-;   file                 : BASE.def
-;   created              : jue oct 3 13:28:27 CEST 2013
-;   copyright            : (C) 2002 CarlosRodriguez
+;   file                 : bh0152_bh0137_Competicion.def
+;   created              : sáb nov 2 10:45:42 CET 2013
+;   copyright            : (C) 2002 Stalin Yajamin - Carlos Rodriguez
 ;
 ;
 ;    This program is free software; you can redistribute it and/or modify
@@ -10,10 +10,10 @@
 ;    (at your option) any later version.                                 
 ;
 
-LIBRARY	BASE
+LIBRARY	bh0152_bh0137_Competicion
 
 SECTIONS .data READ WRITE
 
 EXPORTS
-	BASE
+	bh0152_bh0137_Competicion
 
