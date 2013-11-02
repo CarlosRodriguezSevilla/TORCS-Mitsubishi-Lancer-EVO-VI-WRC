@@ -1,8 +1,8 @@
 ##############################################################################
 #
 #    file                 : Makefile
-#    created              : jue oct 3 13:28:27 CEST 2013
-#    copyright            : (C) 2002 CarlosRodriguez
+#    created              : sáb nov 2 10:45:31 CET 2013
+#    copyright            : (C) 2002 Stalin Yajamin - Carlos Rodriguez
 #
 ##############################################################################
 #
@@ -13,7 +13,7 @@
 #
 ##############################################################################
 
-ROBOT       = BASE
+ROBOT       = bh0152_bh0137_Basico
 MODULE      = ${ROBOT}.so
 MODULEDIR   = drivers/${ROBOT}
 SOURCES     = ${ROBOT}.cpp
@@ -23,7 +23,7 @@ SHIP        = ${ROBOT}.xml pw-evoviwrc.rgb logo.rgb
 SHIPSUBDIRS = 
 
 PKGSUBDIRS  = ${SHIPSUBDIRS}
-src-robots-BASE_PKGFILES = $(shell find * -maxdepth 0 -type f -print)
-src-robots-BASE_PKGDIR   = ${PACKAGE}-${VERSION}/$(subst ${TORCS_BASE},,$(shell pwd))
+src-robots-bh0152_bh0137_Basico_PKGFILES = $(shell find * -maxdepth 0 -type f -print)
+src-robots-bh0152_bh0137_Basico_PKGDIR   = ${PACKAGE}-${VERSION}/$(subst ${TORCS_BASE},,$(shell pwd))
 
 include ${MAKE_DEFAULT}

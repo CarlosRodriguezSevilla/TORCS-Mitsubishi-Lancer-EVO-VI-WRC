@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    file                 : BASE.xml
-    created              : jue oct 3 13:28:27 CEST 2013
-    copyright            : (C) 2002 CarlosRodriguez
+    file                 : bh0152_bh0137_Basico.xml
+    created              : sáb nov 2 10:45:31 CET 2013
+    copyright            : (C) 2002 Stalin Yajamin - Carlos Rodriguez
 -->
 
 <!--    This program is free software; you can redistribute it and/or modify  -->
@@ -11,14 +11,14 @@
 <!--    (at your option) any later version.                                   -->
 
 <!DOCTYPE params SYSTEM "../../libs/tgf/params.dtd">
-<params name="BASE" type="robotdef">
+<params name="bh0152_bh0137_Basico" type="robotdef">
   <section name="Robots">
     <section name="index">
       <section name="1">
-	<attstr name="name" val="BASE"></attstr>
-	<attstr name="desc" val="Fastest car in this side of the Mississippi"></attstr>
+	<attstr name="name" val="bh0152_bh0137_Basico"></attstr>
+	<attstr name="desc" val=""></attstr>
 	<attstr name="team" val=""></attstr>
-	<attstr name="author" val="CarlosRodriguez"></attstr>
+	<attstr name="author" val="Stalin Yajamin - Carlos Rodriguez"></attstr>
 	<attstr name="car name" val="pw-evoviwrc"></attstr>
 	<attstr name="category" val="Offroad-4WD-GrA"></attstr>
 	<attnum name="race number" val="0"></attnum>

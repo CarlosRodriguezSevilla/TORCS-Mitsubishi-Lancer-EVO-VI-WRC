@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="BASE" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="bh0152_bh0137_Basico" - Package Owner=<4>
 
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 
@@ -10,7 +10,7 @@
 
 
 
-CFG=BASE - Win32 Debug
+CFG=bh0152_bh0137_Basico - Win32 Debug
 
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 
@@ -18,7 +18,7 @@ CFG=BASE - Win32 Debug
 
 !MESSAGE 
 
-!MESSAGE NMAKE /f "BASE.mak".
+!MESSAGE NMAKE /f "bh0152_bh0137_Basico.mak".
 
 !MESSAGE 
 
@@ -28,7 +28,7 @@ CFG=BASE - Win32 Debug
 
 !MESSAGE 
 
-!MESSAGE NMAKE /f "BASE.mak" CFG="BASE - Win32 Debug"
+!MESSAGE NMAKE /f "bh0152_bh0137_Basico.mak" CFG="bh0152_bh0137_Basico - Win32 Debug"
 
 !MESSAGE 
 
@@ -36,9 +36,9 @@ CFG=BASE - Win32 Debug
 
 !MESSAGE 
 
-!MESSAGE "BASE - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "bh0152_bh0137_Basico - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 
-!MESSAGE "BASE - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "bh0152_bh0137_Basico - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 
 !MESSAGE 
 
@@ -60,7 +60,7 @@ RSC=rc.exe
 
 
 
-!IF  "$(CFG)" == "BASE - Win32 Release"
+!IF  "$(CFG)" == "bh0152_bh0137_Basico - Win32 Release"
 
 
 
@@ -86,9 +86,9 @@ RSC=rc.exe
 
 # PROP Target_Dir ""
 
-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BASE_EXPORTS" /YX /FD /c
+# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BH0152_BH0137_BASICO_EXPORTS" /YX /FD /c
 
-# ADD CPP /nologo /G5 /W3 /GX /O2 /I "../../../export/include" /I "../../windows/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BASE_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /G5 /W3 /GX /O2 /I "../../../export/include" /I "../../windows/include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BH0152_BH0137_BASICO_EXPORTS" /YX /FD /c
 
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 
@@ -118,13 +118,13 @@ TargetDir=.\Release
 
 SOURCE="$(InputPath)"
 
-PostBuild_Cmds=copy $(TargetDir)\*.dll $(WkspDir)\runtime\drivers\BASE
+PostBuild_Cmds=copy $(TargetDir)\*.dll $(WkspDir)\runtime\drivers\bh0152_bh0137_Basico
 
 # End Special Build Tool
 
 
 
-!ELSEIF  "$(CFG)" == "BASE - Win32 Debug"
+!ELSEIF  "$(CFG)" == "bh0152_bh0137_Basico - Win32 Debug"
 
 
 
@@ -150,9 +150,9 @@ PostBuild_Cmds=copy $(TargetDir)\*.dll $(WkspDir)\runtime\drivers\BASE
 
 # PROP Target_Dir ""
 
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BASE_EXPORTS" /YX /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BH0152_BH0137_BASICO_EXPORTS" /YX /FD /GZ /c
 
-# ADD CPP /nologo /G5 /W3 /Gm /GX /ZI /Od /I "../../../export/include" /I "../../windows/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BASE_EXPORTS" /YX /FD /GZ /c
+# ADD CPP /nologo /G5 /W3 /Gm /GX /ZI /Od /I "../../../export/include" /I "../../windows/include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "BH0152_BH0137_BASICO_EXPORTS" /YX /FD /GZ /c
 
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 
@@ -182,7 +182,7 @@ TargetDir=.\Debug
 
 SOURCE="$(InputPath)"
 
-PostBuild_Cmds=copy $(TargetDir)\*.dll $(WkspDir)\runtimed\drivers\BASE
+PostBuild_Cmds=copy $(TargetDir)\*.dll $(WkspDir)\runtimed\drivers\bh0152_bh0137_Basico
 
 # End Special Build Tool
 
@@ -196,9 +196,9 @@ PostBuild_Cmds=copy $(TargetDir)\*.dll $(WkspDir)\runtimed\drivers\BASE
 
 
 
-# Name "BASE - Win32 Release"
+# Name "bh0152_bh0137_Basico - Win32 Release"
 
-# Name "BASE - Win32 Debug"
+# Name "bh0152_bh0137_Basico - Win32 Debug"
 
 # Begin Group "Source Files"
 
@@ -210,7 +210,7 @@ PostBuild_Cmds=copy $(TargetDir)\*.dll $(WkspDir)\runtimed\drivers\BASE
 
 
 
-SOURCE=.\BASE.cpp
+SOURCE=.\bh0152_bh0137_Basico.cpp
 
 # End Source File
 
@@ -218,7 +218,7 @@ SOURCE=.\BASE.cpp
 
 
 
-SOURCE=.\BASE.def
+SOURCE=.\bh0152_bh0137_Basico.def
 
 # End Source File
 
