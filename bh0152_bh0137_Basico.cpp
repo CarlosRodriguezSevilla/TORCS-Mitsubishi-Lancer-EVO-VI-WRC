@@ -191,7 +191,9 @@ float velocidadMaxima(tTrackSeg *segment)
 void actualizaAcelerador(tCarElt* car){
     if (freno == 0.0) {
         if(velocidadMaxima(car->_trkPos.seg) > car->_speed_x + margenAcelerador){
-            acelerador = acelerador + cteAcelerador;
+            if(acelerador < 1.0){
+                acelerador = acelerador + cteAcelerador;
+            }
         }
         else if (velocidadMaxima(car->_trkPos.seg) < car->_speed_x){
             acelerador = 0.0;
